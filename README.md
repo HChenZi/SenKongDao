@@ -1,3 +1,4 @@
+### 相比原版添加了 Server酱 推送功能，用的话在环境变量中填入 `SENDKEY` 字段
 # SenKongDao
 明日方舟森空岛签到Python程序
 

@@ -2,8 +2,10 @@ import json
 import sys
 import time
 import datetime
-
 import requests
+import os
+
+SENDKEY = os.environ.get("SENDKEY")
 
 # 声明常量
 # 签到url post请求
@@ -11,6 +13,16 @@ SIGN_URL = "https://zonai.skland.com/api/v1/game/attendance"
 SUCCESS_CODE = 0
 # 休眠三秒继续其他账号签到
 SLEEP_TIME = 3
+
+# 发送消息到Server酱
+def send_message_to_server_chan(title, content):
+    if SENDKEY:
+        data = {
+            "text": title,
+            "desp": content,
+        }
+        response = requests.post(f"https://sctapi.ftqq.com/{SENDKEY}.send", data=data)
+        return response
 
 # 打印当前时间
 print("当前时间为：" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -55,6 +67,8 @@ for cookie_line in cookie_lines:
     code = sign_response_json.get("code")
     message = sign_response_json.get("message")
     data = sign_response_json.get("data")
+
+    send_message_to_server_chan("签到结果", f"用户 {uid} - {message} - {data}")
 
     # 返回成功的话，打印详细信息
     if code == SUCCESS_CODE:
